@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.signal as signal
 
 #creates a second order filter:
 class IIR2filter: #creating iir filter class
@@ -49,4 +50,8 @@ def response(sos): #plots frequency and impulse response from sos coeffs
     plt.plot(np.linspace(0,1,len(y)), abs(np.fft.fft(y)))
     plt.show()
 
-    
+samplingRate = 100
+f1 = 1
+sos = signal.butter(5,2*f1/samplingRate, output = 'sos')
+print(sos)
+response(sos)

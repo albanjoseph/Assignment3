@@ -18,9 +18,9 @@ samplingRate = 100 #sampling rate: 100Hz
 
 f1 = 1
 f2 = 49
-sos = signal.butter(2,[2*f1/samplingRate, 2*f2/samplingRate], 'stop', output = 'sos') #normalised to nyquist
+sos = signal.butter(5,2*f1/samplingRate, output = 'sos')
+#sos = signal.butter(2,[2*f1/samplingRate, 2*f2/samplingRate], 'stop', output = 'sos') #normalised to nyquist
 #IIR.response(sos)
-
 filt = IIR.IIRfilter(sos) #filter object instantiated
 
 def resetTimer(x):
