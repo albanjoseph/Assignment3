@@ -6,7 +6,7 @@ import sys
 from pyqtgraph.Qt import QtGui #pyqtgraph plots different channels in seperate windows
 from timer import Timer
 
-t = Timer()
+t = Timer() #timer object
 
 app = QtGui.QApplication(sys.argv) #create a global QT application object
 running = True #signals to all threads in endless loops that we'd like to run these
@@ -17,7 +17,6 @@ qtPanningPlot2 = rts.QtPanningPlot("Arduino 2nd channel")
 samplingRate = 100 #sampling rate: 100Hz
 
 f1 = 1
-f2 = 49
 sos = signal.butter(5,2*f1/samplingRate, output = 'sos')
 #sos = signal.butter(2,[2*f1/samplingRate, 2*f2/samplingRate], 'stop', output = 'sos') #normalised to nyquist
 #IIR.response(sos)
