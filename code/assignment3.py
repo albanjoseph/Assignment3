@@ -36,12 +36,6 @@ def callBack(data):
     #print(data)
     qtPanningPlot1.addData(data)
     ch1 = board.analog[1].read()
-    samplingF = t.stop()
-    t.start()
-    if samplingF < 100 or samplingF>100:
-        #enter something here?
-        samplingF = samplingF
-
     # 1st sample of 2nd channel might arrive later so need to check
     if ch1:
         # filtering channel 1 samples here:
