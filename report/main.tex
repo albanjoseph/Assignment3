@@ -34,18 +34,50 @@ feel free to add anything else you like to this.
 I have made a data flow diagram but needs to be added in svg format. 
 
 \section{Sampling Rate Verification}
-A timer class was created to check the sampling rate of the system:\\
-CODE\\
-The sampling rate of the acquisition was checked by running it for 10 seconds. The following code was placed withing the function the filtered and plotted the data.\\
-CODE\\
+A timer class was created to check the sampling rate of the system, this can be viewed in Appendix 1.? OR SHOULD I PUT CLASS HERE? The timer makes use of the perf\_counter() function in the python library, `time'
+In the main section of the code a timer `t' was instantiated. t.start() starts the timer:
+\lstset{language=Python}
+\begin{lstlisting}
+t.sampleCount += 1 #increment number of samples counted
+if t.time() >= 10: #if 10 seconds have passed...
+    print(t.sampleCount, "= number of samples taken in 10 seconds")
+    t.reset() #resets the timer and sample count to 0
+\end{lstlisting}
+This code was placed in the `callBack' function, so it was executed every time the data was to be plotted. The sampling rate of the acquisition was checked by running it for 10 seconds. The following code was placed withing the function the filtered and plotted the data.\
 Every time the data acquired is plotted the . If the timer has reached ten seconds then the number of data points acquired is printed to the screen.\\
-TERMINAL PICTURE\\
-Its run for a length of time to ensure that it wasnt a one off. Consistent. There existed a small ripple, An extra one or two samples was being counted every ten seconds, this may be due to jitter. jitter describes the timing errors in the sampling operation caused by clock disturbances. To identify jitter the code was altered to the following:\\
-CODE\\
-The time was measured between each sample. Calculated the sampling frequency from this using the following formula: If the sampling frequency was ... then this was considered jitter. Moving average +10PERCENT? The wrongly acquired data could not be plotted by:
-This was not included in our final code as 1 or 2 extra data points did not drastically effect the function of the system.
+\newline
+\begin{figure}[h!]
+    \centering
+    \includesvg[scale=0.15]{rippleCounter}
+    \caption{Sampling Rate over 10 seconds}
+    \label{fig:universe}
+\end{figure}
+\newline 
+The code was run for slightly longer than one minute to improve consistency. It is clear There existed a small ripple, An extra one or two samples was being counted every ten seconds, this may be due to jitter. jitter describes the timing errors in the sampling operation caused by clock disturbances. To identify jitter the code was altered to the following The code above was altered to the following:\\
+\lstset{language=Python}
+\begin{lstlisting}
+print(t.frequency(), "Hz") #prints sampling frequency
+t.reset() #resets timer
+\end{lstlisting}
+The time was measured between each sample. Calculated the sampling frequency from this using the following formula:
+\newline
+\begin{figure}[h!]
+    \centering
+    \includesvg[scale=0.25]{sampleFrequency}
+    \caption{Sampling Rate over 10 seconds}
+    \label{fig:universe}
+\end{figure}
+\newline 
+The measured sampling frequency varied from approximately 80Hz to 120Hz. However, it was noted that occasionally the sampling frequency was measured to be over 5000Hz. This was obviouslyIf the sampling frequency was ... then this was considered jitter. Moving average +10PERCENT? Some heuristics could be put into place to ensure The wrongly acquired data would not be plotted by:
+\lstset{language=Python}
+\begin{lstlisting}
+def callBack(data):
+    if t.frequency() < 5000:
+        #code for plot data here
+    t.reset() #resets timer
+\end{lstlisting}
 \section{Frequency Response}
-
+This was not included in our final implementation as 1 or 2 extra data points did not drastically effect the function of the system.
 Within the FIR Filter class a unit test was implemented to ensure the filter worked correctly. A simpler but less efficient method was implemented to calculate the expected output from the filter. The result from the inefficient method was compared to the doFilter, if the output was the same then test passed.
 
 \lstset{language=Python}
