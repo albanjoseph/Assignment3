@@ -31,12 +31,12 @@ def resetTimer(x):
 # "data" contains the new sample
 def callBack(data):
     #channel 0 data sent to the plotwindow
-    #data = (data-0.84)#*400 #removes offset and 
-    #print(data)
     qtPanningPlot1.addData(data)
     ch1 = board.analog[1].read()
     # 1st sample of 2nd channel might arrive later so need to check
     if ch1:
+        print(t.frequency(), "Hz")
+        t.reset()
         # filtering channel 1 samples here:
         ch1 = filt.filter(data) 
         qtPanningPlot2.addData(ch1)

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.11.13)  4 DEC 2020 22:21
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.11.13)  5 DEC 2020 11:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -28,8 +28,37 @@ Package: inputenc 2018/08/11 v1.3c Input encoding file
 \inpenc@prehook=\toks15
 \inpenc@posthook=\toks16
 )
+(/usr/local/texlive/2020basic/texmf-dist/tex/latex/listings/listings.sty
+(/usr/local/texlive/2020basic/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks17
+)
+\lst@mode=\count175
+\lst@gtempboxa=\box45
+\lst@token=\toks18
+\lst@length=\count176
+\lst@currlwidth=\dimen135
+\lst@column=\count177
+\lst@pos=\count178
+\lst@lostspace=\dimen136
+\lst@width=\dimen137
+\lst@newlines=\count179
+\lst@lineno=\count180
+\lst@maxwidth=\dimen138
 
-! LaTeX Error: File `import.sty' not found.
+(/usr/local/texlive/2020basic/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2020/03/24 1.8d (Carsten Heinz)
+\c@lstnumber=\count181
+\lst@skipnumbers=\count182
+\lst@framebox=\box46
+)
+(/usr/local/texlive/2020basic/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2020/03/24 1.8d listings configuration
+))
+Package: listings 2020/03/24 1.8d (Carsten Heinz)
+
+
+! LaTeX Error: File `svg.sty' not found.
 
 Type X to quit or <RETURN> to proceed,
 or enter new name. (Default extension: sty)
@@ -38,17 +67,17 @@ Enter file name:
 ! Emergency stop.
 <read *> 
          
-l.4 \usepackage
-               {listings}^^M
+l.5 ^^M
+       
 *** (cannot \read from terminal in nonstop modes)
 
  
 Here is how much of TeX's memory you used:
- 237 strings out of 482056
- 2889 string characters out of 5937674
- 235851 words of memory out of 5000000
- 16007 multiletter control sequences out of 15000+600000
+ 1448 strings out of 482056
+ 20918 string characters out of 5937674
+ 251909 words of memory out of 5000000
+ 17202 multiletter control sequences out of 15000+600000
  532338 words of font info for 24 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
- 25i,0n,20p,150b,36s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 28i,0n,36p,167b,217s stack positions out of 5000i,500n,10000p,200000b,80000s
 !  ==> Fatal error occurred, no output PDF file produced!

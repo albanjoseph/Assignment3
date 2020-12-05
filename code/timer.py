@@ -9,18 +9,19 @@ class Timer:
         #Start a new timer
         self._start_time = time.perf_counter()
 
-    def stop(self):
-        #Stop the timer, and report the elapsed time
-        elapsed_time = time.perf_counter() - self._start_time
+    def reset(self):
+        #Stop the timer, reset the counter, start the timer.
         self._start_time = None
         self.sampleCount = 0
-        print(f"Elapsed time: {elapsed_time:0.4f} seconds")
+        self._start_time = time.perf_counter()
 
     def time(self):
+        #returns time elapsed
         elapsed_time = time.perf_counter() - self._start_time
         return elapsed_time
     
     def frequency(self):
+        #determines frequency from time elapsed
         frequency = 1/(time.perf_counter() - self._start_time)
         return frequency
 
