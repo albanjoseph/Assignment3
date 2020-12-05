@@ -34,11 +34,13 @@ feel free to add anything else you like to this.
 I have made a data flow diagram but needs to be added in svg format. 
 
 \section{Sampling Rate Verification}
-The sampling rate of the acquisition was checked by running it for 10 seconds:\\
+A timer class was created to check the sampling rate of the system:\\
+CODE\\
+The sampling rate of the acquisition was checked by running it for 10 seconds. The following code was placed withing the function the filtered and plotted the data.\\
 CODE\\
 Every time the data acquired is plotted the . If the timer has reached ten seconds then the number of data points acquired is printed to the screen.\\
 TERMINAL PICTURE\\
-Its run for a length of time to ensure that it wasnt a one off. Consistent. There existed a small ripple. An extra one or two samples was being counted every ten seconds, this may be due to jitter. jitter describes the timing errors in the sampling operation caused by clock disturbances. To identify jitter the code was altered to the following:\\
+Its run for a length of time to ensure that it wasnt a one off. Consistent. There existed a small ripple, An extra one or two samples was being counted every ten seconds, this may be due to jitter. jitter describes the timing errors in the sampling operation caused by clock disturbances. To identify jitter the code was altered to the following:\\
 CODE\\
 The time was measured between each sample. Calculated the sampling frequency from this using the following formula: If the sampling frequency was ... then this was considered jitter. Moving average +10PERCENT? The wrongly acquired data could not be plotted by:
 This was not included in our final code as 1 or 2 extra data points did not drastically effect the function of the system.
