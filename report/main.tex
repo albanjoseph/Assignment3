@@ -34,7 +34,41 @@ feel free to add anything else you like to this.
 I have made a data flow diagram but needs to be added in svg format. 
 
 \section{Sampling Rate Verification}
-A timer class was created to check the sampling rate of the system, this can be viewed in Appendix 1.? OR SHOULD I PUT CLASS HERE? The timer makes use of the perf\_counter() function in the python library, `time'
+A timer class was created to check the sampling rate of the system, timer.py:
+\begin{lstlisting}[
+    basicstyle=\small,
+]
+import time
+
+class Timer:
+    def __init__(self):
+        self._start_time = None
+        self.sampleCount = 0
+
+    def start(self):
+        #Start a new timer
+        self._start_time = time.perf_counter()
+
+    def reset(self):
+        #Stop the timer, reset the counter, start the timer.
+        self._start_time = None
+        self.sampleCount = 0
+        self._start_time = time.perf_counter()
+
+    def time(self):
+        #returns time elapsed
+        elapsed_time = time.perf_counter() - self._start_time
+        return elapsed_time
+    
+    def frequency(self):
+        #determines frequency from time elapsed
+        frequency = 1/(time.perf_counter() - self._start_time)
+        return frequency
+
+
+
+\end{lstlisting}
+The timer makes use of the perf\_counter() function in the python library, `time'. Functions were created to start and reset the timer and also to return the time elapsed from the start time. and the frequency associated with that measured time interval
 In the main section of the code a timer `t' was instantiated. t.start() starts the timer:
 \lstset{language=Python}
 \begin{lstlisting}
@@ -76,8 +110,10 @@ def callBack(data):
         #code for plot data here
     t.reset() #resets timer
 \end{lstlisting}
-\section{Frequency Response}
 This was not included in our final implementation as 1 or 2 extra data points did not drastically effect the function of the system.
+
+
+\section{Frequency Response}
 Within the FIR Filter class a unit test was implemented to ensure the filter worked correctly. A simpler but less efficient method was implemented to calculate the expected output from the filter. The result from the inefficient method was compared to the doFilter, if the output was the same then test passed.
 
 \lstset{language=Python}
