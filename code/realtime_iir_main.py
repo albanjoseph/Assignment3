@@ -23,6 +23,7 @@ filt = IIR.IIRfilter(sos) #filter object instantiated
 # "data" contains the new sample
 def callBack(data):
     #channel 0 data sent to the plotwindow
+    data = (data - 0.1)*400
     qtPanningPlot1.addData(data)
     ch1 = board.analog[1].read()
     # 1st sample of 2nd channel might arrive later so need to check
