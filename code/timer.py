@@ -24,5 +24,3 @@ class Timer:
         #determines frequency from time elapsed
         frequency = 1/(time.perf_counter() - self._start_time)
         return frequency
-
-
