@@ -6,16 +6,20 @@
 \setminted{fontsize=\footnotesize}
 \lstset{frame=tb,   language=Python,   aboveskip=3mm,   belowskip=3mm,   showstringspaces=false,   columns=flexible,   basicstyle={\small\ttfamily},   numbers=none,   numberstyle=\tiny\color{gray},   keywordstyle=\color{blue},   commentstyle=\color{dkgreen},   stringstyle=\color{mauve},   breaklines=true,   breakatwhitespace=true,   tabsize=3 }
 
-\title{Digital Signal Processing Assignment 3}
+\title{Digital Signal Processing\\Assignment 3\\Fluid Pressure Sensing}
 \author{2324362M - Connor MacLean\\2324421J - Alban Joseph}
 \date{December 2020}
 
 \begin{document}
 \maketitle
 \section{Introduction}
-In various industrial applications, it is desirable to monitor the rate of change of the volume of a liquid in a tank. The change of volume over time allows for the flow rate to be calculated and adjustments to be made by a controller. This can be done using a liquid pressure sensor. Often industrial control systems rely on accurate measurements to monitor and optimise industrial processes. The process of adding or removing liquid from the tank results in noise being introduced into our sensors signal. This introduces noise into the measurement system due to the movement of water and changes in pressure. The raw signal from a water pressure sensor will contain this noise on top of the low frequency changes in pressure we desire to measure. 
+In various applications, it is desirable to monitor the pressure of a liquid in a tank. This can be done using a pressure sensor, however noise often needs to be removed, e.g.:
+\begin{enumerate}
+  \item Noise exists when monitoring the pressure of a fuel tank on a moving vehicle - the vibrations from driving would effect the signal measured. Hence, in order to determine the correct pressure, the signal could be passed through a filter to remove any noise.
+  \item Industrial control systems often rely on accurate pressure measurements - to monitor and optimise industrial processes. The process of adding or removing liquid from a tank can result in noise being introduced into the measurement system (movement of water causes changes in pressure). The raw signal from a pressure sensor will contain this noise on top of the low frequency signal we desire to measure. In industrial environments, accurate measurements of pressure often allows for the flow rate to be calculated and further adjustments to be made.
+\end{enumerate}
 \newline
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \includesvg[scale=0.25]{figure1}
     \caption{Control System Data Flow Diagram}
