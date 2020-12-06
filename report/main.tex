@@ -2,54 +2,38 @@
 \usepackage[utf8]{inputenc}
 \usepackage{listings}
 \usepackage{svg}
+\usepackage{minted}
+\setminted{fontsize=\footnotesize}
+\lstset{frame=tb,   language=Python,   aboveskip=3mm,   belowskip=3mm,   showstringspaces=false,   columns=flexible,   basicstyle={\small\ttfamily},   numbers=none,   numberstyle=\tiny\color{gray},   keywordstyle=\color{blue},   commentstyle=\color{dkgreen},   stringstyle=\color{mauve},   breaklines=true,   breakatwhitespace=true,   tabsize=3 }
 
 \title{Digital Signal Processing Assignment 3}
 \author{2324362M - Connor MacLean\\2324421J - Alban Joseph}
 \date{December 2020}
 
-
-
-
-
 \begin{document}
 \maketitle
 \section{Introduction}
-
 In various industrial applications, it is desirable to monitor the rate of change of the volume of a liquid in a tank. The change of volume over time allows for the flow rate to be calculated and adjustments to be made by a controller. This can be done using a liquid pressure sensor. Often industrial control systems rely on accurate measurements to monitor and optimise industrial processes. The process of adding or removing liquid from the tank results in noise being introduced into our sensors signal. This introduces noise into the measurement system due to the movement of water and changes in pressure. The raw signal from a water pressure sensor will contain this noise on top of the low frequency changes in pressure we desire to measure. 
 \newline
 \begin{figure}[h!]
     \centering
     \includesvg[scale=0.25]{figure1}
-    \caption{Control System data flow diagram}
+    \caption{Control System Data Flow Diagram}
     \label{fig:universe}
 \end{figure}
 \newline 
-For this assignment the concern lies with the sampling of the output. To optimise the controllers response the high frequency noise must be removed from from our signal. The experimental set up for real time data acquisition is displayed below in figure 2.
-\newline
-\begin{figure}[htbp]
+For this assignment the concern lies with the sampling of the output. To optimise the controllers response the high frequency noise must be removed from from our signal. The experimental set up for real time data acquisition is displayed below in figure \ref{fig:setUp}.
+\begin{figure}[H]
   \centering
-  \includesvg{image.svg}
-  \caption{Experimental set up}
+  \includesvg[scale=0.25]{figure3.svg}
+  \caption{Experimental Set Up}
+  \label{fig:setUp}
 \end{figure}
-\newline 
-
-need to add Youtube video and photo of set up.
-feel free to add anything else you like to this. 
-I have made a data flow diagram but needs to be added in svg format. 
-
-
-
-
-
-
-
-
-
+By disturbing the water and applying pressure to the outside of the tank we can mimic water movement and flow to and from the tank. a video of experimental setup is in available at. In this we used Arduino Uno
+ 
 \section{Sampling Rate Verification}
-A timer class was created to check the sampling rate of the system, timer.py:
-\begin{lstlisting}[
-    basicstyle=\small,
-]
+A class was created in the `timer.py' to check the sampling rate of the system:
+\begin{lstlisting}
 import time
 
 class Timer:
@@ -77,55 +61,58 @@ class Timer:
         frequency = 1/(time.perf_counter() - self._start_time)
         return frequency
 \end{lstlisting}
-The timer makes use of the perf\_counter() function in the python library, `time'. Functions were created to start and reset the timer and also to return the time elapsed from the start time, and the frequency associated with that measured time interval.
-In the main section of the code a timer `t' was instantiated. t.start() starts the timer:
+Many functions were created in this class for different purposes.
+\begin{itemize}
+  \item start(): starts a timer using the perf\_counter() function.
+  \begin{itemize}
+  \item perf\_counter() returns a value (in fractional seconds) of a performance counter, i.e. a clock with the highest available resolution to measure a short duration.
+  \end{itemize}  
+  \item reset(): stops the counter, resets all variables and starts a new timer again.
+  \item time(): returns the time passed since the timer was started.
+  \item frequency(): measures the time elapsed (since the timer started) and returns the frequency associated with this time interval.
+\end{itemize}
+The sampling rate of the acquisition was checked by running it for 10 seconds.\newline
+The sampling rate should be 100Hz, so over 10 seconds, 1000 samples should be captured. In the main section of the code, a timer, `t', was started and the following code was placed in the `callBack' function (so it was executed every time the data was to be plotted):
 \lstset{language=Python}
 \begin{lstlisting}
-t.sampleCount += 1
-if t.time() >= 10: 
-    print(t.sampleCount, "= number of samples taken in 10 seconds")
+t.sampleCount += 1 #increments number of samples counted
+if t.time() >= 10: #if 10 seconds have passed
+    print(t.sampleCount, ``= number of samples taken in 10 seconds'')
     t.reset() #resets the timer and sample count to 0
 \end{lstlisting}
-This code was placed in the `callBack' function, so it was executed every time the data was to be plotted. The sampling rate of the acquisition was checked by running it for 10 seconds. The following code was placed withing the function the filtered and plotted the data.\
-Every time the data acquired is plotted the . If the timer has reached ten seconds then the number of data points acquired is printed to the screen.\\
+Objects of this timer class contain a variable used to count the number of samples captured - `sampleCount'. This variable is incremented every time a new data point is sampled. If 10 seconds have passed, then the number of samples captured is printed to the screen.
 \newline
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \includesvg[scale=0.15]{rippleCounter}
     \caption{Sampling Rate over 10 seconds}
-    \label{fig:universe}
+    \label{fig:tenSecs}
 \end{figure}
 \newline 
-The code was run for slightly longer than one minute to improve consistency. It is clear There existed a small ripple, An extra one or two samples was being counted every ten seconds, this may be due to jitter. jitter describes the timing errors in the sampling operation caused by clock disturbances. To identify jitter the code was altered to the following The code above was altered to the following:
+The code was run for slightly longer than one minute to improve the accuracy of the results. From Figure \ref{fig:tenSecs}, it is clear that a small inconsistency existed in the sampling: an extra one or two samples was being counted every ten seconds. This may be due to jitter. Jitter describes the timing errors in the sampling operation (often caused by clock disturbances). To identify jitter the above code was altered to the following:
 \lstset{language=Python}
 \begin{lstlisting}
-print(t.frequency(), ``Hz'') 
-t.reset() 
+print(t.frequency(), ``Hz'') #prints the sampling frequency
+t.reset() #clock is reset
 \end{lstlisting}
-The time was measured between each sample. Calculated the sampling frequency from this using the following formula:
+Every time data is captured a timer is reset. The frequency function measures the time between each sample and returns the frequency from this time interval, i.e. the sampling frequency.
 \newline
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \includesvg[scale=0.25]{sampleFrequency}
-    \caption{Sampling Rate over 10 seconds}
-    \label{fig:universe}
+    \caption{Sampling Rate between consecutive points}
+    \label{fig:sampleF}
 \end{figure}
 \newline 
-The measured sampling frequency varied from approximately 80Hz to 120Hz. However, it was noted that occasionally the sampling frequency was measured to be over 5000Hz. This was obviouslyIf the sampling frequency was ... then this was considered jitter. Moving average +10PERCENT? Some heuristics could be put into place to ensure The wrongly acquired data would not be plotted by:
+The sampling frequency varied from 80Hz to 120Hz, approximately . However, it was noted that occasionally the sampling frequency was measured to be over 5000Hz. This was considered to be jitter. Some heuristics could be put into place to ensure wrongly acquired data would not be plotted by:
 \lstset{language=Python}
 \begin{lstlisting}
 def callBack(data):
-    if t.frequency() < 5000:
+    if t.frequency() < 1000: #if sampling frequency is less than 1000Hz
         #code for plotting data here
     t.reset() #resets timer
 \end{lstlisting}
-This was not included in our final implementation as 1 or 2 extra data points did not drastically effect the function of the system.
-
-
-
-
-
-
+If the frequency measured between two consecutive points exceed 1000Hz then the data is not plotted. This was not included in our final implementation as 1 or 2 extra data points did not drastically effect the function of the system.
 
 \section{Frequency Response}
 Within the FIR Filter class a unit test was implemented to ensure the filter worked correctly. A simpler but less efficient method was implemented to calculate the expected output from the filter. The result from the inefficient method was compared to the doFilter, if the output was the same then test passed.
@@ -161,8 +148,9 @@ filt = IIR.IIRfilter(sos)
 The Discrete frequency normalised to Nyquist is given to the function. The sos coefficients returned are for 6 2nd order IIR filters. 
 
 
-
 \section{Filter Class}
+
+
 \subsection{2nd Order Filter}
 The `IIR2filter' Class takes the SOS coefficients in as its constructor. These coefficients are stored as a0, a1, a2, b0, b1, b2 and two buffers are initialised; buffer1 and buffer2. within this class a filter function (filter) is implemented. This 2nd order IIR filter uses two accumulators; acc\_ input, and acc\_ output. An incoming data value is taken as the argument of the function. The IIR filter operation is outline below in both code and a data flow diagram.
 \newline
@@ -188,7 +176,7 @@ This is a direct form II implementation as it uses two accumulators and two dela
 
 \subsection{Chain of 2nd Order Filters}
 
-Cascading second order IIR filters allows for the overall quality of the filter to be improved whilst ensuring it remains relatively easy to design. A second class is defined which takes the sos coefficents from the Butterworth filter in its constructor. The coefficients are appended into a list of 6 arrays. 
+Cascading second order IIR filters allows for the overall quality of the filtered signal to be improved whilst ensuring it remains relatively easy to design. A second class is defined which takes the sos coefficents from the Butterworth filter in its constructor. The coefficients are appended into a list of 6 arrays. 
 
 The signal data is given to the 2nd order IIR filter function `filter'. The output data is then fed back into the filter function and the next lot of coefficients is call into the function. This repeats 6 times and the final value is output once it has been passed through each 2nd order IIR filter. 
 \newline
@@ -203,17 +191,26 @@ The signal data is given to the 2nd order IIR filter function `filter'. The outp
 \newline
 \newline
 The Final piece of filtered data is stored in `outP' and returned by the function. 
-\newline
-
-
-
-
 
 \section{Results}
-Compare your filtered results with the original recordings\\
-have you been successful\\
-Do a critical analysis
-
+As can be seen in figure 6 the noise present in our signal has been completely removed from the sample by the low pass IIR filter. The filter signal follows the original signal reasonably well, however the low sampling rate of the Arduino limits the accuracy of sampling and therefore the resolution of the filter.  
+\newline
+\begin{figure}[h!]
+    \centering
+    \includesvg[scale=0.13]{filterResults}
+    \caption{Raw Data Vs Filtered Signal}
+    \label{fig:universe}
+\end{figure}
+\newline 
+Overall the filtering operation has been successful in removing the components of the signal above 1Hz. 
 \bibliographystyle{plain}
-\bibliography{references}
+\section{Appendix}
+\subsection{IIR\_Filter.py}
+\inputminted{python}{IIR_filter.py}
+\subsection{timer.py}
+\inputminted{python}{timer.py}
+\subsection{realtimescope.py}
+\inputminted{python}{realtimescope.py}
+\subsection{realtime\_iir\_main.py}
+\inputminted{python}{realtime_iir_main.py}
 \end{document}
