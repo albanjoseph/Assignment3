@@ -10,7 +10,7 @@ class QtPanningPlot:
         self.win = pg.GraphicsLayoutWidget()
         self.win.setWindowTitle(title)
         self.plt = self.win.addPlot()
-        self.plt.setYRange(-1,5)
+        self.plt.setYRange(-1,7)
         self.plt.setXRange(0,500)
         self.curve = self.plt.plot()
         self.data = []
