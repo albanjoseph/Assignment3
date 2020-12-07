@@ -27,7 +27,7 @@ def callBack(data):
     if t.time() >= 10: #if 10 seconds have passed
         print(t.sampleCount,"= number of samples taken in 10 seconds")
         t.reset() #resets the timer and sample count to 0
-    data = (data - 0.1)*400
+    data = (data - 0.1)*400 #removes offset and converts voltage to pressure
     qtPanningPlot1.addData(data)
     ch1 = board.analog[1].read()
     # 1st sample of 2nd channel might arrive later so need to check
