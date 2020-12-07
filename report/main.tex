@@ -139,11 +139,13 @@ If the frequency measured between two consecutive points exceed 1000Hz then the 
 WHY LOWPASS\\
 PICTURE OF DESIRED RESPONSE\\
 
+(
 Within the FIR Filter class a unit test was implemented to ensure the filter worked correctly. A simpler but less efficient method was implemented to calculate the expected output from the filter. The result from the inefficient method was compared to the doFilter, if the output was the same then test passed.
 
 Each array stores the coefficients for a specific 2nd order IIR filter. Another function is created which takes in a data value (x) and calls the filter defined in the class above.
+)
 
-\subsection{Butterworth Vs Chebl?}
+\subsection{Butterworth Vs Chebyshev}
 WHY BUTTERWORTH\\
 SOS FORMAT (show sos matrix)\\
 
