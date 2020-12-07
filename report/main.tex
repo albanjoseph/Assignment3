@@ -3,6 +3,8 @@
 \usepackage{listings}
 \usepackage{svg}
 \usepackage{minted}
+\usepackage{caption}
+\usepackage{subcaption}
 \setminted{fontsize=\footnotesize}
 \lstset{frame=tb,   language=Python,   aboveskip=3mm,   belowskip=3mm,   showstringspaces=false,   columns=flexible,   basicstyle={\small\ttfamily},   numbers=none,   numberstyle=\tiny\color{gray},   keywordstyle=\color{blue},   commentstyle=\color{dkgreen},   stringstyle=\color{mauve},   breaklines=true,   breakatwhitespace=true,   tabsize=3 }
 
@@ -12,28 +14,41 @@
 
 \begin{document}
 \maketitle
+Declaration of Originality and Submission Information.\\
+I affirm that this submission is my own / the groups original work in accordance with the University of Glasgow Regulations and the School of Engineering Requirements.
 \section{Introduction}
 In various applications, it is desirable to monitor the pressure of a liquid in a tank. This can be done using a pressure sensor, however noise often needs to be removed, e.g.:
 \begin{enumerate}
   \item Noise exists when monitoring the pressure of a fuel tank on a moving vehicle - the vibrations from driving would effect the signal measured. Hence, in order to determine the correct pressure, the signal could be passed through a filter to remove any noise.
-  \item Industrial control systems often rely on accurate pressure measurements - to monitor and optimise industrial processes. The process of adding or removing liquid from a tank can result in noise being introduced into the measurement system (movement of water causes changes in pressure). The raw signal from a pressure sensor will contain this noise on top of the low frequency signal we desire to measure. In industrial environments, accurate measurements of pressure often allows for the flow rate to be calculated and further adjustments to be made.
-\end{enumerate}
-\newline
+  \item Industrial control systems often rely on accurate pressure measurements to monitor and optimise industrial processes. The process of adding or removing liquid from a tank can result in noise being introduced into the measurement system (movement of water causes changes in pressure). The raw signal from a pressure sensor will contain this noise on top of the low frequency signal we desire to measure. In industrial environments, accurate measurements of pressure often allows for the flow rate to be calculated and further adjustments to be made.
 \begin{figure}[H]
     \centering
     \includesvg[scale=0.25]{figure1}
     \caption{Control System Data Flow Diagram}
-    \label{fig:universe}
+    \label{fig:controlSys}
 \end{figure}
-\newline 
-For this assignment the concern lies with the sampling of the output. To optimise the controllers response the high frequency noise must be removed from from our signal. The experimental set up for real time data acquisition is displayed below in figure \ref{fig:setUp}.
+To optimise the controllers response the high frequency noise must be removed from from our signal.
+\end{enumerate}
+In this experiment, we will take raw data from a pressure sensor and filter out any noise to achieve an accurate pressure reading. The experimental set up for real time data acquisition is displayed below in Figure \ref{fig:a}.
 \begin{figure}[H]
+\centering
+\begin{subfigure}{.5\textwidth}
   \centering
-  \includesvg[scale=0.25]{figure3.svg}
-  \caption{Experimental Set Up}
-  \label{fig:setUp}
+  \includesvg[scale=0.25]{figure3}
+  \caption{}
+  \label{fig:a}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[scale=0.45]{pressureCircuit}
+  \caption{}
+  \label{fig:b}
+\end{subfigure}
+\caption{Experimental Set Up}
+\label{fig:setUp}
 \end{figure}
-By disturbing the water and applying pressure to the outside of the tank we can mimic water movement and flow to and from the tank. a video of experimental setup is in available at. In this we used Arduino Uno
+An Arduino Uno was used to sample data and the sensor was connected to the Arduino as shown in Figure \ref{fig:b}. The raw signal captured by the Arduino was sent into a python file to be filtered.
+By disturbing the water and applying pressure to the outside of the tank we can mimic noise. A video detailing the experimental setup, and the results from the experiment, is available at...
  
 \section{Sampling Rate Verification}
 A class was created in the `timer.py' to check the sampling rate of the system:
@@ -65,7 +80,7 @@ class Timer:
         frequency = 1/(time.perf_counter() - self._start_time)
         return frequency
 \end{lstlisting}
-Many functions were created in this class for different purposes.
+Several functions were created in this class for different purposes.
 \begin{itemize}
   \item start(): starts a timer using the perf\_counter() function.
   \begin{itemize}
