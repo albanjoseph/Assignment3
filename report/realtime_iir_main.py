@@ -23,6 +23,10 @@ filt = IIR.IIRfilter(sos) #filter object instantiated
 # "data" contains the new sample
 def callBack(data):
     #channel 0 data sent to the plotwindow
+    t.sampleCount += 1 #increments number of samples counted
+    if t.time() >= 10: #if 10 seconds have passed
+        print(t.sampleCount,"= number of samples taken in 10 seconds")
+        t.reset() #resets the timer and sample count to 0
     data = (data - 0.1)*400
     qtPanningPlot1.addData(data)
     ch1 = board.analog[1].read()
@@ -38,6 +42,7 @@ board = Arduino(PORT)
 
 board.samplingOn(1000 / samplingRate) # Set the sampling rate in the Arduino
 # Register the callback which adds the data to the animated plot
+t.start()
 board.analog[0].register_callback(callBack) #The function "callback" is called when data has arrived
 
 board.analog[0].enable_reporting() #Enable the callback

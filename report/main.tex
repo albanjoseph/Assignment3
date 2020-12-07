@@ -169,46 +169,54 @@ The Discrete frequency normalised to Nyquist is given to the function. The sos c
 
 
 \section{Filter Class}
-
-
 \subsection{2nd Order Filter}
-The `IIR2filter' Class takes the SOS coefficients in as its constructor. These coefficients are stored as a0, a1, a2, b0, b1, b2 and two buffers are initialised; buffer1 and buffer2. within this class a filter function (filter) is implemented. This 2nd order IIR filter uses two accumulators; acc\_ input, and acc\_ output. An incoming data value is taken as the argument of the function. The IIR filter operation is outline below in both code and a data flow diagram.
-\newline
-\begin{figure}[h!]
+The `IIR2filter' class contains a function which implements a 2nd order IIR filter. The coefficients a0, a1, a2, b0, b1, b2 (gain blocks in Figure \ref{fig:dataFlow}) are given as the arguments for the constructor. These coefficients are stored and two buffers are initialised. The IIR filter operation is outline below in both code and a data flow diagram.
+\begin{figure}[H]
     \centering
     \includesvg[scale=0.25]{figure2}
-    \caption{Direct Form II 2nd Order IIR Data Flow Diagram }
+    \caption{Direct Form II 2nd Order IIR Data Flow Diagram}
     \label{fig:dataFlow}
 \end{figure}
-\newline 
-This is a direct form II implementation as it uses two accumulators and two delay steps. The filtered value is then returned by the function. 
-\newline
-\newline
+This is a direct form II implementation, it uses two accumulators and two delay steps to implement the following transfer function:
+\[H(z) = \frac{b_0+b_1z^-^1+b_2z^-^2}{a_0+a_1z^-^1+a_2z^-^2}\]
+A 2nd order IIR filter, represented by the above equation, was programmed:
 \begin{lstlisting}
-
-    def filter(self, x): 
-        acc_input = self.a0*x - self.buffer1*self.a1 - self.buffer2*self.a2 
-        acc_output = acc_input*self.b0 + self.buffer1*self.b1 + self.buffer2*self.b2 
-        self.buffer2 = self.buffer1
-        self.buffer1 = acc_input
-        return acc_output
+def filter(self, x): #need to create two accumulators
+    acc_input = self.a0*x - self.buffer1*self.a1 - self.buffer2*self.a2 #accumulator for IIR part
+    acc_output = acc_input*self.b0 + self.buffer1*self.b1 + self.buffer2*self.b2 #FIR accumulator
+    self.buffer2 = self.buffer1
+    self.buffer1 = acc_input
+    return acc_output
 \end{lstlisting}
+This `filter' method takes an incoming data value as the argument and uses the coefficients (stored in the constructor) to return a filtered value.
 
 \subsection{Chain of 2nd Order Filters}
-
-Cascading second order IIR filters allows for the overall quality of the filtered signal to be improved whilst ensuring it remains relatively easy to design. A second class is defined which takes the sos coefficents from the Butterworth filter in its constructor. The coefficients are appended into a list of 6 arrays. 
-
-The signal data is given to the 2nd order IIR filter function `filter'. The output data is then fed back into the filter function and the next lot of coefficients is call into the function. This repeats 6 times and the final value is output once it has been passed through each 2nd order IIR filter. 
-\newline
+Cascading second order IIR filters allows for the overall quality of the filtered signal to be improved whilst ensuring it remains relatively easy to design.
+\\CASCADING FILTER BLOCK DIAGRAM\\
+A second class was defined to implement this.\newline
+The sos array produced from the scipy.signal.butter function was taken as the constructor argument.
+\begin{lstlisting}
+def __init__(self, sos): #constructor function
+        self.filt = [] #list of instances of IIR2Filter
+        for x in range(len(sos)): #repeat for all rows in sos array
+            self.filt.append(IIR2filter(sos[x][0], sos[x][1], sos[x][2], sos[x][3], sos[x][4], sos[x][5]))
+            #creates IIR2Filter instance with sos array
+            #and stores instance in list
+\end{lstlisting}
+self.filt is a list of 2nd order IIR filters. The `filter' method (in this class) takes an incoming data point, sends it through the stored IIR filters and returns the output:
 \begin{lstlisting}
     def filter(self, x): 
-        inP = x
-        for i in range(len(self.filt)):
-            outP = self.filt[i].filter(inP)
-            inP = outP
+        inP = x #store incoming data point in inP
+        for i in range(len(self.filt)): #repeat for all filters
+            outP = self.filt[i].filter(inP) #output of filter[i]
+            inP = outP #IIR filter output becomes input of next filter
         return outP
 \end{lstlisting}
-The Final piece of filtered data is stored in `outP' and returned by the function. 
+The incoming data point is stored in a variable inP, where inP is the input to the upcoming IIR filter. The output from the IIR filter is calculated and stored in outP. inP = outP sets the output calculated to be the input of the following IIR filter. This is repeated until there are no more IIR filters in the self.filt list. The final value for outP is returned.
+
+\subsection{Testing the Cascading IIR Filters}
+To ensure the IIRFilter filter function sends incoming data through a chain of 2nd order IIR2Filters, a test was created.
+reponse(sos)
 
 \section{Results}
 The QPlanningPlot class (from the example on the github repo) was used to plot, and hence compare, the raw data with the filtered signal - as seen in Figure \ref{fig:filtered}. The high frequency noise present in the signal was completely removed by the low pass IIR filter. 
@@ -218,11 +226,11 @@ The QPlanningPlot class (from the example on the github repo) was used to plot, 
     \caption{Unfiltered Vs Filtered Signal}
     \label{fig:filtered}
 \end{figure}
-The low frequency signal, i.e. the desired pressure reading, was maintained sufficiently. The filtered signal follows the original data well, although a small time delay exists. IIR filters have nonlinear phase response so as the number of filters cascaded increases, the phase delay also increases. This filter, therefore, is well suited for pressure sensing a fuel tank (and other applications monitoring signal amplitudes). However, this system would not be appropriate for industrial control systems, where timing and phase delay are important factors.\newline
+The low frequency signal, i.e. the desired pressure reading, was maintained sufficiently. The filtered signal follows the original data well, although a small time delay exists. IIR filters have nonlinear phase response so as the number of filters cascaded increases, the phase delay also increases. This filter, therefore, is well suited for pressure sensing a fuel tank (and other applications monitoring signal amplitudes). However, this system would not be appropriate for industrial control systems, where phase delay is an important factor.\newline
 This filter uses minimal memory space and little computing power ($\approx$24 calculations per sample) to adequately remove high frequency noise above 1Hz; therefore, for our purposes, the overall filtering operation has been successful. 
 
 
-\pagebreak NEED TO INCLUDE TIMER FOR 10 SECONDS
+\pagebreak
 \section{Appendix}
 \subsection{realtime\_iir\_main.py}
 \inputminted{python}{realtime_iir_main.py}
