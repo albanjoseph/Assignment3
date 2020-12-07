@@ -15,8 +15,11 @@ qtPanningPlot1 = rts.QtPanningPlot("Arduino 1st channel") #Two instances of plot
 qtPanningPlot2 = rts.QtPanningPlot("Arduino 2nd channel")
 
 samplingRate = 100 #sampling rate: 100Hz
-f1 = 1
-sos = signal.butter(5,2*f1/samplingRate, output = 'sos') #coeffs should filter everything except DC
+f1 = 1 #1Hz cut off
+sos = signal.butter(5,2*f1/samplingRate, output = 'sos')
+#coeffs should filter everything except DC
+#5th order
+#frequency normalised to Nyquist
 filt = IIR.IIRfilter(sos) #filter object instantiated
 
 # called for every new sample at channel 0 which has arrived from the Arduino
@@ -27,7 +30,7 @@ def callBack(data):
     if t.time() >= 10: #if 10 seconds have passed
         print(t.sampleCount,"= number of samples taken in 10 seconds")
         t.reset() #resets the timer and sample count to 0
-    data = (data - 0.1)*400
+    data = (data - 0.1)*400 #removes offset and converts voltage to pressure
     qtPanningPlot1.addData(data)
     ch1 = board.analog[1].read()
     # 1st sample of 2nd channel might arrive later so need to check
