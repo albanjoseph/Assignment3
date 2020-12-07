@@ -22,29 +22,30 @@ class IIR2filter: #creating iir filter class
 
 class IIRfilter: #chain of 2nd order filter
     def __init__(self, sos): #constructer function
-        self.filt = []
-        for x in range(len(sos)):
+        self.filt = [] #list of instances of IIR2Filter
+        for x in range(len(sos)): #repeat for all rows in sos array
             self.filt.append(IIR2filter(sos[x][0], sos[x][1], sos[x][2], sos[x][3], sos[x][4], sos[x][5]))
-
+            #creates IIR2Filter instance with sos array
+            #and stores instance in list
     def filter(self, x): #chain of 2nd Order Filters
-        inP = x
-        for i in range(len(self.filt)):
-            outP = self.filt[i].filter(inP)
-            inP = outP
+        inP = x #store incoming data point in inP
+        for i in range(len(self.filt)): #repeat for all filters
+            outP = self.filt[i].filter(inP) #output of filter[i]
+            inP = outP #IIR filter output becomes input of next filter
         return outP
 
 def response(sos): #plots frequency and impulse response from sos coeffs
-    filt = IIRfilter(sos)
+    filt = IIRfilter(sos) #creates chain of 2nd order filters
 
     x=np.zeros(100,dtype=complex) #creating impulse response
     x[10]=1
 
     y=np.zeros(100,dtype=complex)
     for i in range(len(x)):
-        y[i]= filt.filter(x[i])
+        y[i]= filt.filter(x[i]) #result of impulse response stored in y
         
     plt.figure(1)
-    plt.plot(y)
+    plt.plot(y) #plots impulse response
     plt.figure(2)
-    plt.plot(np.linspace(0,1,len(y)), abs(np.fft.fft(y)))
+    plt.plot(np.linspace(0,1,len(y)), abs(np.fft.fft(y))) #plots transfer function
     plt.show()
