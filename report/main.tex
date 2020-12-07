@@ -93,7 +93,7 @@ Several functions were created in this class for different purposes.
   \item frequency(): measures the time elapsed (since the timer started) and returns the frequency associated with this time interval.
 \end{itemize}
 The sampling rate of the acquisition was checked by running it for 10 seconds.\newline
-The sampling rate should be 100Hz, so over 10 seconds, 1000 samples should be captured. In the main section of the code, a timer, `t', was started and the following code was placed in the `callBack' function (so it was executed every time the data was to be plotted):
+The sampling rate should be 100Hz, so over 10 seconds, 1000 samples should be captured. In the main section of the code, a timer, `t', was started and the following code was placed in the `callBack' function; hence, it was executed every time the data was to be plotted:
 \lstset{language=Python}
 \begin{lstlisting}
 t.sampleCount += 1 #increments number of samples counted
