@@ -15,8 +15,11 @@ qtPanningPlot1 = rts.QtPanningPlot("Arduino 1st channel") #Two instances of plot
 qtPanningPlot2 = rts.QtPanningPlot("Arduino 2nd channel")
 
 samplingRate = 100 #sampling rate: 100Hz
-f1 = 1
-sos = signal.butter(5,2*f1/samplingRate, output = 'sos') #coeffs should filter everything except DC
+f1 = 1 #1Hz cut off
+sos = signal.butter(5,2*f1/samplingRate, output = 'sos')
+#coeffs should filter everything except DC
+#5th order
+#frequency normalised to Nyquist
 filt = IIR.IIRfilter(sos) #filter object instantiated
 
 # called for every new sample at channel 0 which has arrived from the Arduino
